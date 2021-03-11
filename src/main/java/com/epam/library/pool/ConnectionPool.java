@@ -1,11 +1,11 @@
 package com.epam.library.pool;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -14,6 +14,7 @@ public enum ConnectionPool {
     INSTANCE;
 
     private BlockingQueue<ProxyConnection> pool;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionPool.class);
 
     private ApplicationProperties applicationProperties = ApplicationProperties.getApplicationProperties();
     private final int DEFAULT_POOL_SIZE = 32;
@@ -33,8 +34,8 @@ public enum ConnectionPool {
         ProxyConnection connection = null;
         try {
             connection = pool.take();
-        } catch (InterruptedException e) {
-            // TODO: logger
+        } catch (InterruptedException exception) {
+            LOGGER.info("InterruptedException: {}", exception.getMessage());
         }
         return connection;
     }
@@ -45,8 +46,8 @@ public enum ConnectionPool {
         for (int i = 0; i < DEFAULT_POOL_SIZE; i++){
             try {
                 pool.take().closeConnection();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException exception) {
+                LOGGER.info("InterruptedException: {}", exception.getMessage());
             }
         }
         deregisterDrivers();
@@ -55,8 +56,8 @@ public enum ConnectionPool {
         DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
             try {
                 DriverManager.deregisterDriver(driver);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            } catch (SQLException exception) {
+                LOGGER.info("SQLException: {}", exception.getMessage());
             }
         });
     }

@@ -1,5 +1,8 @@
 package com.epam.library.pool;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -22,6 +25,7 @@ import java.util.concurrent.Executor;
 public class ProxyConnection implements Connection {
 
     private final Connection realConnection;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProxyConnection.class);
 
     public ProxyConnection(Connection realConnection) {
         this.realConnection = realConnection;
@@ -75,8 +79,8 @@ public class ProxyConnection implements Connection {
     void closeConnection() {
         try {
             realConnection.close();
-        } catch (SQLException e) {
-            //todo: logging
+        } catch (SQLException exception) {
+            LOGGER.info("SQLException: {}", exception.getMessage());
         }
     }
 

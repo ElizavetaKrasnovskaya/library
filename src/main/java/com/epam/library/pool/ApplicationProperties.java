@@ -1,9 +1,14 @@
 package com.epam.library.pool;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class ApplicationProperties {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationProperties.class);
 
     private static ApplicationProperties instance;
 
@@ -24,8 +29,8 @@ public class ApplicationProperties {
         try {
             String url = databaseProperties.getString(DATABASE_URL);
             return url;
-        } catch (MissingResourceException e){
-            // TODO: logger
+        } catch (MissingResourceException exception){
+            LOGGER.info("MissingResourceException: {}.", exception.getMessage());
         }
         return null;
     }
@@ -33,8 +38,8 @@ public class ApplicationProperties {
         try {
             String username = databaseProperties.getString(DATABASE_USERNAME);
             return username;
-        } catch (MissingResourceException e){
-            // TODO: logger
+        } catch (MissingResourceException exception){
+            LOGGER.info("MissingResourceException: {}", exception.getMessage());
         }
         return null;
     }
@@ -42,8 +47,8 @@ public class ApplicationProperties {
         try {
             String pass = databaseProperties.getString(DATABASE_PASSWORD);
             return pass;
-        } catch (MissingResourceException e){
-            // TODO: logger
+        } catch (MissingResourceException exception){
+            LOGGER.info("MissingResourceException: {}", exception.getMessage());
         }
         return null;
     }
@@ -51,8 +56,8 @@ public class ApplicationProperties {
         try {
             String driver = databaseProperties.getString(DATABASE_DRIVER);
             return driver;
-        } catch (MissingResourceException e){
-            // TODO: logger
+        } catch (MissingResourceException exception){
+            LOGGER.info("MissingResourceException: {}", exception.getMessage());
         }
         return null;
     }
