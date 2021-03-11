@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/image/icon.jpg" type="image/x-icon">
     <title>Index</title>
 </head>
 <body>
