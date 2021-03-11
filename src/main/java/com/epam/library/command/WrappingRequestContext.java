@@ -3,7 +3,8 @@ package com.epam.library.command;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class WrappingRequestContext implements RequestContext{
+public class WrappingRequestContext implements RequestContext {
+
 
     private final HttpServletRequest request;
 
@@ -22,6 +23,11 @@ public class WrappingRequestContext implements RequestContext{
     }
 
     @Override
+    public Object getParameter(String name) {
+        return request.getParameter(name);
+    }
+
+    @Override
     public void invalidateSession() {
         final HttpSession session = request.getSession(false);
         if (session != null) {
@@ -30,9 +36,14 @@ public class WrappingRequestContext implements RequestContext{
     }
 
     @Override
-    public void setSessionAttribute(String name, Object value) {
-        final HttpSession session = request.getSession();
-        session.setAttribute(name, value);
+    public void setSessionAttribute(String name, Object obj) {
+        final HttpSession session = request.getSession(true);
+        session.setAttribute(name, obj);
+    }
+
+    @Override
+    public HttpSession getSession() {
+        return request.getSession(false);
     }
 
     public static RequestContext of(HttpServletRequest request) {

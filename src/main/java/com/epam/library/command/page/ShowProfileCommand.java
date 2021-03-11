@@ -5,28 +5,28 @@ import com.epam.library.command.RequestContext;
 import com.epam.library.command.ResponseContext;
 import com.epam.library.dao.impl.BookDaoImpl;
 import com.epam.library.model.Book;
+import com.epam.library.model.User;
 import com.epam.library.service.CommonService;
 import com.epam.library.service.impl.BookServiceImpl;
 
 import java.util.List;
 
-public enum ShowAllBooksCommand implements Command {
+public enum ShowProfileCommand implements Command {
 
     INSTANCE;
 
     private static final String BOOKS_ATTRIBUTE_NAME = "books";
 
-    private final CommonService<Book> bookService;
+    private final BookServiceImpl bookService;
 
-    ShowAllBooksCommand() {
+    ShowProfileCommand(){
         bookService = new BookServiceImpl(new BookDaoImpl());
     }
 
-
-    private static final ResponseContext BOOKS_PAGE_RESPONSE = new ResponseContext() {
+    private static final ResponseContext PROFILE = new ResponseContext() {
         @Override
         public String getPage() {
-            return "/WEB-INF/view/catalog.jsp";
+            return "/WEB-INF/view/profile.jsp";
         }
 
         @Override
@@ -37,8 +37,9 @@ public enum ShowAllBooksCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        final List<Book> books = bookService.findAll();
+        final User user = (User) request.getSession().getAttribute("user");
+        final List<Book> books = bookService.findByReaderTicket(user.getId());
         request.setAttribute(BOOKS_ATTRIBUTE_NAME, books);
-        return BOOKS_PAGE_RESPONSE;
+        return PROFILE;
     }
 }

@@ -8,25 +8,21 @@ import com.epam.library.model.Book;
 import com.epam.library.service.CommonService;
 import com.epam.library.service.impl.BookServiceImpl;
 
-import java.util.List;
-
-public enum ShowAllBooksCommand implements Command {
-
+public enum ShowBookByIdCommand implements Command {
     INSTANCE;
-
-    private static final String BOOKS_ATTRIBUTE_NAME = "books";
+    private static final String BOOK_ATTRIBUTE_NAME = "book";
 
     private final CommonService<Book> bookService;
 
-    ShowAllBooksCommand() {
+    ShowBookByIdCommand() {
         bookService = new BookServiceImpl(new BookDaoImpl());
     }
 
 
-    private static final ResponseContext BOOKS_PAGE_RESPONSE = new ResponseContext() {
+    private static final ResponseContext BOOK_PAGE_RESPONSE = new ResponseContext() {
         @Override
         public String getPage() {
-            return "/WEB-INF/view/catalog.jsp";
+            return "/WEB-INF/view/book.jsp";
         }
 
         @Override
@@ -37,8 +33,8 @@ public enum ShowAllBooksCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        final List<Book> books = bookService.findAll();
-        request.setAttribute(BOOKS_ATTRIBUTE_NAME, books);
-        return BOOKS_PAGE_RESPONSE;
+        final Book book = bookService.findById(Long.parseLong((String) request.getParameter("id")));
+        request.setAttribute(BOOK_ATTRIBUTE_NAME, book);
+        return BOOK_PAGE_RESPONSE;
     }
 }
